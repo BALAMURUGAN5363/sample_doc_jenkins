@@ -37,8 +37,8 @@ pipeline {
         stage('Deploy Containers') {
             steps {
                 echo 'Deploying Flask & MySQL containers with Docker Compose...'
-                sh 'docker compose down --remove-orphans || true'
-                sh 'docker compose up -d --build'
+                sh 'docker rm -f flask_mysql_db flask_web_app || true'
+                sh 'docker compose -p sample_doc_jenkins up -d --build'
             }
         }
 
