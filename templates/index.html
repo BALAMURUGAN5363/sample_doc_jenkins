@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Jenkins + Docker + MySQL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge-row">
+                <span class="badge flask">Flask</span>
+                <span class="badge docker">Docker</span>
+                <span class="badge jenkins">Jenkins</span>
+                <span class="badge mysql">MySQL</span>
+            </div>
+            <h1>Task & Pipeline Dashboard</h1>
+            <p class="subtitle">CI/CD Demo Application running on Docker & MySQL</p>
+
+            <div class="status-box {% if db_connected %}status-connected{% else %}status-disconnected{% endif %}">
+                Database Status: <strong>{% if db_connected %}Connected to MySQL{% else %}Disconnected / Connecting...{% endif %}</strong>
+            </div>
+        </header>
+
+        <!-- New Task Form -->
+        <section class="card form-card">
+            <h2>Add New Task</h2>
+            <form action="{{ url_for('index') }}" method="POST">
+                <div class="form-group">
+                    <input type="text" name="title" placeholder="Task Title (e.g. Deploy container)" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="description" placeholder="Description or deployment note (optional)" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">+ Add Task</button>
+            </form>
+        </section>
+
+        <!-- Task List -->
+        <section class="card">
+            <h2>Current Tasks ({{ tasks|length }})</h2>
+            {% if tasks %}
+                <ul class="task-list">
+                    {% for task in tasks %}
+                    <li class="task-item {% if task.status == 'Completed' %}completed{% endif %}">
+                        <div class="task-content">
+                            <div class="task-title-row">
+                                <span class="task-title">{{ task.title }}</span>
+                                <span class="status-pill status-{{ task.status|lower }}">{{ task.status }}</span>
+                            </div>
+                            {% if task.description %}
+                                <p class="task-desc">{{ task.description }}</p>
+                            {% endif %}
+                            <small class="task-time">Created: {{ task.created_at }}</small>
+                        </div>
+                        <div class="task-actions">
+                            <form action="{{ url_for('toggle_task', task_id=task.id) }}" method="POST">
+                                <button type="submit" class="btn btn-sm btn-secondary">
+                                    {% if task.status == 'Completed' %}Mark Pending{% else %}Complete{% endif %}
+                                </button>
+                            </form>
+                            <form action="{{ url_for('delete_task', task_id=task.id) }}" method="POST">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">No tasks found. Add a task above to test MySQL persistence!</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>
