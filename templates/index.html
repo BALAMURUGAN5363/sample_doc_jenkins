@@ -24,6 +24,39 @@
             </div>
         </header>
 
+        <!-- Live Calculator Section -->
+        <section class="card">
+            <h2>Live Calculator &amp; Business Logic</h2>
+            <p style="font-size: 0.85rem; color: #718096; margin-bottom: 12px;">Tested by Jenkins CI/CD pipeline before every deployment</p>
+            <form action="{{ url_for('calculate') }}" method="POST" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <input type="number" step="any" name="num1" placeholder="Number 1" required style="flex: 1; min-width: 100px; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                <select name="op" style="padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-weight: bold; background: white;">
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">&times;</option>
+                    <option value="/">&divide;</option>
+                    <option value="%">%</option>
+                    <option value="^">^ (Power)</option>
+                </select>
+                <input type="number" step="any" name="num2" placeholder="Number 2" required style="flex: 1; min-width: 100px; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                <button type="submit" class="btn btn-primary" style="width: auto; padding: 8px 18px;">= Calculate</button>
+            </form>
+
+            {% if calculations %}
+                <div style="margin-top: 15px; border-top: 1px solid #edf2f7; padding-top: 12px;">
+                    <h3 style="font-size: 0.95rem; color: #4a5568; margin-bottom: 8px;">Recent Calculation History (Stored in MySQL):</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px;">
+                        {% for calc in calculations %}
+                            <li style="background: #f7fafc; padding: 6px 10px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; display: flex; justify-content: space-between;">
+                                <span><strong>{{ calc.expression }}</strong></span>
+                                <span style="color: #a0aec0; font-size: 0.75rem;">{{ calc.created_at }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </section>
+
         <!-- New Task Form -->
         <section class="card form-card">
             <h2>Add New Task</h2>
