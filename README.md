@@ -19,7 +19,7 @@ A complete, 100% free CI/CD starter project demonstrating how to build, test, an
 |                                                                   |
 |   +--------------------------+     +--------------------------+   |
 |   |   Flask App Container    |     |     MySQL Container      |   |
-|   |  http://localhost:5000   | <-> |       Port 3306          |   |
+|   |  http://localhost:5000   | <-> |   Port 3307 (Host) / 3306|   |
 |   |        (app.py)          |     |    (Persistent Volume)   |   |
 |   +--------------------------+     +--------------------------+   |
 +-------------------------------------------------------------------+
